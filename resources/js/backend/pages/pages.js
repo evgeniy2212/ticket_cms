@@ -1,0 +1,32 @@
+import Vue from 'vue'
+import Vuex, {mapGetters, mapActions} from 'vuex'
+import {store} from './store/store'
+import ActionBar from './components/action-bar';
+import Editor from './components/editor';
+import Settings from './components/settings';
+import VueSweetalert2 from 'vue-sweetalert2';
+Vue.use(VueSweetalert2);
+Vue.use(Vuex);
+Vue.config.productionTip = false;
+
+new Vue({
+    el: '#app',
+    name: 'NewsConstructor',
+    store,
+    components: {
+        ActionBar,
+        Editor,
+        Settings,
+    },
+    computed: {
+        ...mapGetters({
+            showEditor: 'showEditor',
+        })
+    },
+    methods: {
+        ...mapActions([
+            'fetchNews'
+        ])
+    }
+});
+

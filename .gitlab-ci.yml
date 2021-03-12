@@ -1,0 +1,119 @@
+stages:
+  - build
+  - docker-build
+  - deploy
+
+.init_ssh: &init_ssh |
+  eval $(ssh-agent -s)
+  echo "$SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  mkdir -p ~/.ssh
+  chmod 700 ~/.ssh
+  [[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  ssh-keyscan ${SSH_HOST} >> ~/.ssh/known_hosts
+  chmod 644 ~/.ssh/known_hosts
+
+
+composer:
+  stage: build
+  image: artjoker/7.4:php-dev
+  script:
+    - time composer install --no-interaction --ansi --no-suggest --no-dev
+  artifacts:
+    name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
+    expire_in: 2 hour
+    paths:
+      - vendor/
+  only:
+    - dev
+    - master
+
+node:
+  stage: build
+  image: artjoker/7.4:node
+  script:
+    - time yarn
+    - time yarn prod
+  artifacts:
+    name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
+    expire_in: 2 hour
+    paths:
+      - public/
+  only:
+    - dev
+    - master
+
+docker-package:
+  stage: docker-build
+  image: docker:stable
+  dependencies:
+    - composer
+    - node
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
+  script:
+    - TAG="$CI_COMMIT_REF_NAME"
+    - docker build --tag "${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_COMMIT_REF_NAME}"
+      -f ./docker/Dockerfile ./
+    - echo "${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_COMMIT_TAG}"
+    - docker push "${CI_REGISTRY}/${CI_PROJECT_PATH}:${TAG}"
+  only:
+    - dev
+    - master
+    - /^v[0-9]+(?:.[0-9]+)+$/
+
+dev:
+  image: artjoker/7.4:deploy
+  stage: deploy
+  variables:
+    ENV: ${DEV}
+    YML_FILE: docker/yml/dev.yml
+    AFTER_DEPLOY: docker/deploy/dev.sh
+  script: &docker-deploy
+    - echo "$ENV" > .deploy
+    - ENV_FILE=.deploy
+    - set -o allexport; . $ENV_FILE;
+    - *init_ssh
+    - echo "$ENV_VARIABLES" | base64 -d > .env
+    - cat ${YML_FILE} > docker-compose.yml
+    - sed -i -e "s|@repo@|$CI_REGISTRY_IMAGE:${CI_COMMIT_REF_NAME}|g" "docker-compose.yml"
+    - sed -i -e "s|Host:example.com|Host:${DOMAIN}|g" "docker-compose.yml"
+    - sed -i -e "s|domain.example.com|${DOMAIN}|g" "docker-compose.yml"
+    - sed -i -e "s|redirect.regex=^http?://example.com|redirect.regex=^http?://${DOMAIN}|g" "docker-compose.yml"
+    - sed -i -e "s|redirect.replacement=https://example.com|redirect.replacement=https://${DOMAIN}|g" "docker-compose.yml"
+    - scp -P ${SSH_PORT} docker-compose.yml .env ${SSH_USER}@${SSH_HOST}:${SERVER_PATH}
+    - ssh -p ${SSH_PORT} ${SSH_USER}@${SSH_HOST} "cd ${SERVER_PATH} &&
+      docker login -u "$CI_REGISTRY_USER" -p "$CI_JOB_TOKEN" "$CI_REGISTRY" &&
+      docker-compose pull --quiet"
+    - ssh -p ${SSH_PORT} ${SSH_USER}@${SSH_HOST}
+      "
+      cd ${SERVER_PATH} &&
+      docker-compose down -v &&
+      docker-compose up -d &&
+      docker-compose exec -T php /app/${AFTER_DEPLOY}
+      "
+      - exit 0
+  when: manual
+  only:
+    - dev
+    - /^v[0-9]+(?:.[0-9]+)+$/
+
+production:
+  image: artjoker/7.4:deploy
+  stage: deploy
+  variables:
+    SSH_PRIVATE_KEY: ${PROD_SSH_PRIVATE_KEY}
+    DOMAIN: ${PROD_DOMAIN}
+    SERVER_PATH: ${PROD_SERVER_PATH}
+    SSH_USER: ${PROD_SSH_USER}
+    SSH_HOST: ${PROD_SSH_HOST}
+    SSH_PORT: ${PROD_SSH_PORT}
+    ENV_VARIABLES: ${PROD_ENV_VARIABLES}
+    YML_FILE: docker/yml/dev.yml
+    AFTER_DEPLOY: docker/deploy/prod.sh
+  script: *docker-deploy
+  when: manual
+  only:
+    - master
+    - /^v[0-9]+(?:.[0-9]+)+$/
