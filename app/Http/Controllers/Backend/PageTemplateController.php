@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\FieldType;
+use App\Models\PageTemplate;
 use Illuminate\Http\Request;
 
 class PageTemplateController extends Controller
@@ -14,7 +16,12 @@ class PageTemplateController extends Controller
      */
     public function index()
     {
-        //
+        $templates = PageTemplate::active()->paginate(config('app.limits.backend.pagination'));
+
+        return view('backend.templates.index', [
+            'templates' => $templates,
+            'permission' => 'pages',
+        ]);
     }
 
     /**
@@ -24,7 +31,9 @@ class PageTemplateController extends Controller
      */
     public function create()
     {
-        //
+        return view('backend.templates.create', [
+            'field_types' => FieldType::all(),
+        ]);
     }
 
     /**

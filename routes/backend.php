@@ -36,6 +36,8 @@
             Route::resource('permissions', 'Backend\Users\PermissionsController')->except('show');
             // admin pages
             Route::resource('pages', 'Backend\PagesController')->except('show');
+            // admin templates
+            Route::resource('templates', 'Backend\PageTemplateController')->except('show');
             // admin logs
             Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
         });

@@ -1,37 +1,46 @@
 <template>
     <div>
         <div class="text-right">
-            <a v-if="this.getNewsId" target="_blank"
+            <a v-if="this.getNewsId"
+               target="_blank"
                class="btn btn-outline-info" :href="showUrl">
                 <span class="fa fa-eye"></span>
-                Перегляд
+                Show
             </a>
-            <a v-if="canSave"  @click="saveAndContinueArticle" class="btn btn-outline-primary" href="#">
+            <a v-if="canSave"
+               @click="saveAndContinue"
+               class="btn btn-outline-primary"
+               href="#">
                 <span class="fa fa-save"></span>
-                {{ this.getNewsId ? 'Оновити та продовжити' : 'Створити та продовжити' }}
+                {{ this.getNewsId ? 'Update and continue' : 'Create and continue' }}
             </a>
-            <a v-if="canSave" @click="saveArticle" class="btn btn-outline-secondary" href="#">
+            <a v-if="canSave"
+               @click="save"
+               class="btn btn-outline-secondary"
+               href="#">
                 <span class="fa fa-save"></span>
-                {{ this.getNewsId ? 'Оновити' : 'Створити' }}
+                {{ this.getNewsId ? 'Update' : 'Create' }}
             </a>
             <a v-if="this.getNewsId && !this.getVisibility"
-               @click="publishNowArticle" class="btn btn-outline-info" href="#">
+               @click="publishNow"
+               class="btn btn-outline-info"
+               href="#">
                 <span class="fa fa-eye"></span>
                 Опублікувати зараз
             </a>
             <a v-if="this.getNewsId && !this.getVisibility &&  !this.getPubBySchedule"
-               @click="publishByScheduleArticle" class="btn btn-outline-success" href="#">
+               @click="publishBySchedule" class="btn btn-outline-success" href="#">
                 <span class="fa fa-calendar"></span>
                 Опублікувати за розкладом
             </a>
             <a v-if="this.getNewsId && this.getVisibility"
-               @click="hideArticle"
+               @click="hide"
                class="btn btn-outline-warning" href="#">
                 <span class="fa fa-eye-slash"></span>
                 Приховати
             </a>
             <a v-if="this.getNewsId"
-               @click="deleteArticle" class="btn btn-outline-danger" href="#">
+               @click="deleteItem" class="btn btn-outline-danger" href="#">
                 <span class="fa fa-trash"></span>
                 Видалити
             </a>
@@ -70,7 +79,8 @@
                               getVisibility:    'getVisibility',
                           }),
             canSave () {
-                return this.getAlias && this.getTitle && this.getParent;
+                // return this.getAlias && this.getTitle && this.getParent;
+                return true;
             },
             showUrl() {
                 return this.getAlias ? '/' + this.getAlias + '-article?preview' : '#';
@@ -80,7 +90,7 @@
             setTab(tab) {
                 this.$store.commit('switchTab', tab);
             },
-            deleteArticle() {
+            deleteItem() {
                 this.$swal({
                                title:               'Ви дійсно хочете видалити новину?',
                                type:                'warning',
@@ -91,35 +101,35 @@
                                showLoaderOnConfirm: true
                            }).then((result) => {
                     if (result.value) {
-                        this.deleteNews(this.getNewsId);
+                        this.deleteItem(this.getNewsId);
                     }
                 });
             },
-            saveArticle() {
+            save() {
                 this.setOptionContinue(false);
-                this.getNewsId ? this.updateNews(this.getNewsId) : this.storeNews();
+                this.getNewsId ? this.update(this.getNewsId) : this.store();
             },
-            saveAndContinueArticle() {
+            saveAndContinue() {
                 this.setOptionContinue(true);
-                this.getNewsId ? this.updateNews(this.getNewsId) : this.storeNews();
+                this.getNewsId ? this.update(this.getNewsId) : this.store();
             },
-            publishNowArticle() {
+            publishNow() {
                 this.setConfigVisibility(true);
-                this.getNewsId ? this.updateNews(this.getNewsId) : this.storeNews();
+                this.getNewsId ? this.update(this.getNewsId) : this.store();
             },
-            publishByScheduleArticle() {
+            publishBySchedule() {
                 this.setPubBySchedule(true);
-                this.getNewsId ? this.updateNews(this.getNewsId) : this.storeNews();
+                this.getNewsId ? this.update(this.getNewsId) : this.store();
             },
-            hideArticle() {
+            hide() {
                 this.setConfigVisibility(false);
                 this.setPubBySchedule(false);
-                this.updateNews(this.getNewsId)
+                this.update(this.getNewsId)
             },
             ...mapActions([
-                              'storeNews',
-                              'updateNews',
-                              'deleteNews'
+                              'store',
+                              'update',
+                              'delete'
                           ]),
             ...mapMutations([
                                 'setPubBySchedule',

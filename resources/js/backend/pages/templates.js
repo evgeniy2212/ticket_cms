@@ -11,7 +11,7 @@ Vue.config.productionTip = false;
 
 new Vue({
     el: '#app',
-    name: 'PageConstructor',
+    name: 'TemplateConstructor',
     store,
     components: {
         ActionBar,

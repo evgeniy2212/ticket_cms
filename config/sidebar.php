@@ -30,6 +30,11 @@
                 'url'   => '/pages',
             ],
             [
+                'icon'     => 'fa fa-building',
+                'title' => 'templates',
+                'url'   => '/templates',
+            ],
+            [
                 'icon'     => 'fa fa-ad',
                 'title' => 'banners',
                 'url'   => '/campaigns',

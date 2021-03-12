@@ -141,6 +141,9 @@ function backend(mix) {
     mix
         .js('resources/js/backend/pages/pages.js', 'public/js/pages.js')
         .version();
+    mix
+        .js('resources/js/backend/pages/templates.js', 'public/js/templates.js')
+        .version();
 
     mix.js([
         'resources/js/backend/app.js',

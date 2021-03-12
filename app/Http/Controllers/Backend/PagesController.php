@@ -83,7 +83,7 @@
         public function create()
         {
             return view('backend.pages.create', [
-                'block_types' => FieldType::all(),
+                'field_types' => FieldType::all(),
             ]);
         }
 
