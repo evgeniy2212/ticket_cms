@@ -25,6 +25,7 @@ new Vue({
     },
     methods: {
         ...mapActions([
+            'fetchItems'
         ])
     }
 });

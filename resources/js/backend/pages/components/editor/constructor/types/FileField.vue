@@ -1,22 +1,22 @@
 <template>
     <div class="row">
         <div class="col-12">
-            <label :for="'name' + block.uid.toString()">
+            <label :for="'name' + field.uid.toString()">
                 Назва
                 <small class="text-muted">{{ nameCount }} / {{ getLimit }}</small>
             </label>
-            <input @change="updateBlock"
+            <input @change="updateField"
                    @keyup="validateName"
                    class="form-control mb-2"
-                   :id="'name' + block.uid.toString()"
-                   v-model="block.title"
+                   :id="'name' + field.uid.toString()"
+                   v-model="field.title"
                    type="text">
         </div>
         <div class="col-12">
-            <a :href="block.subtitle" download>Upload File</a>
+            <a :href="field.subtitle" download>Upload File</a>
         </div>
         <div class="col-12">
-            <vue-dropzone :ref="'dropzone_' + block.uid.toString()"
+            <vue-dropzone :ref="'dropzone_' + field.uid.toString()"
                           @vdropzone-file-added="addedfile"
                           id="customdropzone"
                           :options="dropzoneOptions">
@@ -32,9 +32,9 @@
     import {mapGetters} from "vuex";
 
     export default {
-        name:       "file-block",
+        name:       "file-field",
         props:      {
-            block: Object
+            field: Object
         },
         components: {
             vueDropzone: vue2Dropzone
@@ -57,25 +57,25 @@
         },
         methods:    {
             validateName() {
-                return this.block.title = this.block.title.substr(0, this.getLimit);
+                return this.field.title = this.field.title.substr(0, this.getLimit);
             },
             addedfile(file) {
                 this.files.push(file);
                 if (this.files.length > 1) {
-                    let dropzoneId = 'dropzone_' + this.block.uid.toString();
+                    let dropzoneId = 'dropzone_' + this.field.uid.toString();
                     let files = this.$refs[dropzoneId].removeFile(this.files[0]);
                     this.files.splice(0, 1);
                 }
                 var reader = new FileReader();
                 var self = this;
                 reader.addEventListener("loadend", function (event) {
-                    self.block.file = event.target.result;
-                    self.block.filename = file.name;
-                    self.updateBlock();
+                    self.field.file = event.target.result;
+                    self.field.filename = file.name;
+                    self.updateField();
                 });
                 reader.readAsDataURL(file);
             },
-            updateBlock() {
+            updateField() {
                 this.$emit('update', this.data)
             }
         },
@@ -85,11 +85,11 @@
                               'getResolutionList',
                           ]),
             nameCount() {
-                return this.block && this.block.title ? this.block.title.length : 0;
+                return this.field && this.field.title ? this.field.title.length : 0;
             },
         },
         mounted() {
-            this.block.resolutionKey = this.block.resolutionKey ? this.block.resolutionKey : 'lg';
+            this.field.resolutionKey = this.field.resolutionKey ? this.field.resolutionKey : 'lg';
         }
     }
 </script>

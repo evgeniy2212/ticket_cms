@@ -1,35 +1,57 @@
 import Vue from 'vue'
+import {axios} from "../../axios";
 
 export default {
-    async storeNews({commit, dispatch, getters, state}) {
+    async store({commit, dispatch, getters, state}) {
         try {
             const data = await dispatch('serializeContentData', state.content);
             dispatch('preloader');
-            const response = await axios.post(window.shared.newsRoute, data);
-            let newsId = response.data.news.id;
-            commit('setNewsId', newsId);
-            dispatch('fetchNews', {
-                id:     newsId,
+            console.log(window.shared.route);
+            console.log(data);
+            // axios.get('https://api.github.com/users/benjamingeorge')
+            //     .then(function (res) {
+            //         console.log(res.data);
+            //     })
+            //     .catch(function(res) {
+            //         if(res instanceof Error) {
+            //             console.log(res.message);
+            //         } else {
+            //             console.log(res.data);
+            //         }
+            //     });
+            const response = await axios.post(window.shared.route, data)
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log('ERROR');
+                    console.log(error);
+                });
+            let itemId = response.data.item.id;
+            commit('setItemId', itemId);
+            dispatch('fetchItems', {
+                id:     itemId,
                 silent: true
             });
             if (state.options.continue) {
-                window.history.pushState(null, null, window.shared.newsRoute + '/' + newsId + '/edit');
+                window.history.pushState(null, null, window.shared.route + '/' + itemId + '/edit');
             } else {
-                window.location.href = window.shared.newsRoute;
+                window.location.href = window.shared.route;
             }
-            dispatch('userMessage', 'Публiкацiя успiшно створена');
+            dispatch('userMessage', 'Created successfully');
             commit('setErrors', {})
         } catch ({response = {}}) {
-            commit('setErrors', response.data.errors);
+            console.log('errorResponse: ', response);
+            // commit('setErrors', response.data.errors);
             Vue.swal().close()
         }
     },
-    async fetchNews({commit, dispatch, getters, state}, inputData) {
+    async fetchItems({commit, dispatch, getters, state}, inputData) {
         try {
             if (!inputData.silent) {
                 dispatch('preloader');
             }
-            const response = await axios.get(window.shared.newsRoute + '/' + inputData.id);
+            const response = await axios.get(window.shared.route + '/' + inputData.id);
             const data = await dispatch('deSerializeResponseData', response.data);
             commit('setContent', data)
             if (!inputData.silent) {
@@ -42,19 +64,19 @@ export default {
             Vue.swal().close()
         }
     },
-    async updateNews({commit, dispatch, getters, state}, id) {
+    async updateItems({commit, dispatch, getters, state}, id) {
         try {
             const data = await dispatch('serializeContentData', state.content);
             dispatch('preloader');
-            const response = await axios.put(window.shared.newsRoute + '/' + id, data);
+            const response = await axios.put(window.shared.route + '/' + id, data);
             if (!state.options.continue) {
-                window.location.href = window.shared.newsRoute;
+                window.location.href = window.shared.route;
             }
-            dispatch('fetchNews', {
+            dispatch('fetchItems', {
                 id:     id,
                 silent: true
             });
-            dispatch('userMessage', 'Публiкацiя успiшно оновлена');
+            dispatch('userMessage', 'Updated successfully');
             commit('setErrors', {})
         } catch ({response = {}}) {
             commit('setErrors', response.data.errors);
@@ -69,8 +91,8 @@ export default {
                 },
             };
             dispatch('preloader');
-            const response = await axios.delete(window.shared.newsRoute + '/' + id, config);
-            dispatch('userMessage', 'Публiкацiя успiшно видалена');
+            const response = await axios.delete(window.shared.route + '/' + id, config);
+            dispatch('userMessage', 'Deleted successfully');
             window.location.replace(response.data.redirectUrl);
         } catch ({response = {}}) {
             commit('setErrors', response.data.errors);
@@ -79,13 +101,15 @@ export default {
     },
     async serializeContentData({state}) {
         let categories = {};
+        console.log('state.content.categories: ', state.content.categories);
         state.content.categories.map(function (category, index) {
             categories[category.id] = {is_main: false};
         });
+        console.log('state.content.parent.id: ', state.content.parent.id);
         categories[state.content.parent.id] = {is_main: true};
 
         return {
-            news:       {
+            items:       {
                 alias:           state.content.alias,
                 user_id:         state.content.author ? state.content.author.id : null,
                 pub_date:        state.content.pub_date.toLocaleString("uk-UA"),
@@ -93,7 +117,7 @@ export default {
                 name:            state.content.title,
                 subtitle:        state.content.subtitle,
                 tech:            state.content.tech,
-                block_item_id:   state.content.image ? state.content.image.id : state.content.block_item_id,
+                field_item_id:   state.content.image ? state.content.image.id : state.content.field_item_id,
                 enable_comments: state.content.config.can_comment,
                 hide_author:     state.content.config.hide_author,
                 lenta:           state.content.config.lenta,
@@ -104,22 +128,22 @@ export default {
             },
             categories: categories,
             tags:       state.content.tags.map(a => a.id),
-            blocks:     state.content.blocks.map(function (block, index) {
+            fields:     state.content.fields.map(function (field, index) {
                 return {
-                    id:            block.id,
-                    block_type_id: block.block_type_id,
-                    body:          block.body,
-                    image:         block.image,
-                    block_items:   block.block_items,
-                    boolean:       block.boolean,
-                    visible:       block.visible,
-                    title:         block.title,
-                    filename:      block.filename,
-                    file:          block.file,
-                    subtitle:      block.subtitle,
-                    component:     block.component,
+                    id:            field.id,
+                    field_type_id: field.field_type_id,
+                    body:          field.body,
+                    image:         field.image,
+                    field_items:   field.field_items,
+                    boolean:       field.boolean,
+                    visible:       field.visible,
+                    title:         field.title,
+                    filename:      field.filename,
+                    file:          field.file,
+                    subtitle:      field.subtitle,
+                    component:     field.component,
                     position:      index,
-                    resolutionKey: block.resolutionKey || null,
+                    resolutionKey: field.resolutionKey || null,
                 }
             }),
         };
@@ -137,7 +161,7 @@ export default {
             pub_by_schedule: data.pub_by_schedule,
             title:           data.name,
             subtitle:        data.subtitle,
-            block_item_id:   data.block_item_id,
+            field_item_id:   data.field_item_id,
             tech:            data.tech,
             description:     data.description,
             config:          {
@@ -152,24 +176,24 @@ export default {
             },
             categories:      categories,
             tags:            data.tags,
-            blocks:          data.blocks
+            fields:          data.fields
                                  .sort((a, b) => a.position - b.position)
-                                 .map(function (block, index) {
+                                 .map(function (field, index) {
                                      return {
-                                         id:            block.id,
+                                         id:            field.id,
                                          uid:           Math.floor(Math.random() * 10000) + 1,
-                                         body:          block.body,
-                                         title:         block.title,
-                                         subtitle:      block.subtitle,
-                                         block_items:   block.block_items,
-                                         boolean:       block.boolean,
-                                         visible:       block.visible,
-                                         position:      block.position,
-                                         component:     block.type.component,
-                                         name:          block.type.name,
-                                         block_type_id: block.block_type_id,
-                                         icon:          block.type.icon,
-                                         resolutionKey: block.resolutionKey,
+                                         body:          field.body,
+                                         title:         field.title,
+                                         subtitle:      field.subtitle,
+                                         field_items:   field.field_items,
+                                         boolean:       field.boolean,
+                                         visible:       field.visible,
+                                         position:      field.position,
+                                         component:     field.type.component,
+                                         name:          field.type.name,
+                                         field_type_id: field.field_type_id,
+                                         icon:          field.type.icon,
+                                         resolutionKey: field.resolutionKey,
                                      }
                                  }),
         };
@@ -177,7 +201,7 @@ export default {
 
     async preloader() {
         Vue.swal({
-                     title:             'Зачекайте',
+                     title:             'Wait',
                      allowEscapeKey:    false,
                      allowOutsideClick: false,
                      showConfirmButton: false,

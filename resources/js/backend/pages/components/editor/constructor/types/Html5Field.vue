@@ -1,8 +1,8 @@
 <template>
     <div>
-        <small class="text-muted">{{ blockLength }} / {{ getLimitBody }}</small>
+        <small class="text-muted">{{ fieldLength }} / {{ getLimitBody }}</small>
         <editor
-            @blur="updateBlock"
+            @blur="updateField"
             :options="this.defaultOptions"
             v-model="html"
             ref="tuiEditor"
@@ -18,12 +18,12 @@
 
     export default {
         props:      {
-            block: Object
+            field: Object
         },
         data() {
             return {
                 html:           '',
-                blockLength:    0,
+                fieldLength:    0,
                 loaded:         false,
                 defaultOptions: {
                     minHeight:               '200px',
@@ -61,7 +61,7 @@
             editor: Editor
         },
         methods:    {
-            updateBlock() {
+            updateField() {
                 this.$emit('update', {body: this.getHtml()})
             },
             getHtml() {
@@ -72,10 +72,10 @@
             },
             onEditorChange() {
                 if (!this.loaded) {
-                    this.setHtml(this.block.body);
+                    this.setHtml(this.field.body);
                     this.loaded = true;
                 }
-                this.blockLength = this.getHtml().length;
+                this.fieldLength = this.getHtml().length;
             },
         },
         computed:   {

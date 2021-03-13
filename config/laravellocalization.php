@@ -6,7 +6,7 @@
         // These are sorted by the native name, which is the order you might show them in a language selector.
         // Regional languages are sorted by their base language, so "British English" sorts as "English, British"
         'supportedLocales'        => [
-            'ru' => ['name' => 'Russian', 'script' => 'Cyrl', 'native' => 'Русский', 'regional' => 'ru_RU'],
+//            'ru' => ['name' => 'Russian', 'script' => 'Cyrl', 'native' => 'Русский', 'regional' => 'ru_RU'],
             'en' => ['name' => 'English', 'script' => 'Latn', 'native' => 'English', 'regional' => 'en_GB'],
 
             //'ace'         => ['name' => 'Achinese',               'script' => 'Latn', 'native' => 'Aceh', 'regional' => ''],

@@ -1,9 +1,9 @@
 <template>
     <div>
         <small class="text-muted">{{ bodyCount }} / {{ getDefaultLimit }}</small>
-        <textarea @blur="updateBlock"
+        <textarea @blur="updateField"
                @keyup="validateBody"
-               class="form-control" type="text" value="header"rows="3" v-model="block.body">
+               class="form-control" type="text" value="header"rows="3" v-model="field.body">
         </textarea>
     </div>
 </template>
@@ -13,22 +13,22 @@ import {mapGetters} from "vuex";
 
 export default {
     props:    {
-        block: Object
+        field: Object
     },
     data() {
         return {}
     },
     methods:  {
-        updateBlock() {
-            this.$emit('update', {body: this.block.body})
+        updateField() {
+            this.$emit('update', {body: this.field.body})
         },
         validateBody() {
-            return this.block.body = this.block.body.substr(0, this.getDefaultLimit);
+            return this.field.body = this.field.body.substr(0, this.getDefaultLimit);
         },
     },
     computed: {
         bodyCount() {
-            return this.block && this.block.body ? this.block.body.length : 0;
+            return this.field && this.field.body ? this.field.body.length : 0;
         },
         ...mapGetters([
                           'getDefaultLimit',

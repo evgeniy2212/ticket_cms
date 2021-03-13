@@ -35,7 +35,7 @@
     export default {
         name:       'upload-image',
         props:      {
-            block:             {
+            field:             {
                 type:     Object,
                 required: false,
             },
@@ -218,18 +218,18 @@
             }
         },
         watch:      {
-            block: {
+            field: {
                 immediate: true,
-                handler(block) {
+                handler(field) {
                     if (!this.initedImages) {
-                        for (let index in block.block_items) {
-                            if (block.block_items[index]['id']) {
+                        for (let index in field.field_items) {
+                            if (field.field_items[index]['id']) {
                                 let link = this.isParsed
-                                           ? '/' + block.block_items[index]['name']
-                                           : '/storage/news/' + this.getNewsId + '/' + block.block_items[index]['name'];
+                                           ? '/' + field.field_items[index]['name']
+                                           : '/storage/news/' + this.getItemId + '/' + field.field_items[index]['name'];
                                 this.files[index] = {
-                                    id:   block.block_items[index]['id'],
-                                    name: block.block_items[index]['name'],
+                                    id:   field.field_items[index]['id'],
+                                    name: field.field_items[index]['name'],
                                 };
                                 this.image[index] = link;
                             }
@@ -244,7 +244,7 @@
         computed:   {
             ...mapGetters([
                               'getImageId',
-                              'getNewsId',
+                              'getItemId',
                               'isParsed'
                           ])
         }

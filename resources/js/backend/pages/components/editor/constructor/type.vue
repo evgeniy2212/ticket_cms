@@ -16,7 +16,7 @@ export default {
     },
     methods: {
         pushBlock() {
-            this.$store.commit('pushBlock', this.type)
+            this.$store.commit('pushField', this.type)
         }
     }
 }

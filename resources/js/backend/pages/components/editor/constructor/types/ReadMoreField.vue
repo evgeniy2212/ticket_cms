@@ -9,9 +9,9 @@
 
 <script>
 export default {
-    name: "read-more-block",
+    name: "read-more-field",
     props:{
-        block: Object
+        field: Object
     },
     data() {
         return {
@@ -20,7 +20,7 @@ export default {
         }
     },
     methods: {
-        updateBlock() {
+        updateField() {
             this.$emit('update', this.data)
         }
     }

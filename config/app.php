@@ -82,13 +82,13 @@
         |
         */
 
-        'locale' => 'ru',
+        'locale' => 'en',
 
-        'locales' => ['ru', 'en'],
+        'locales' => ['en'],
 
-        'backend_locale' => 'ru',
+        'backend_locale' => 'en',
 
-        'backend_locales' => ['ru', 'en'],
+        'backend_locales' => ['en'],
 
         /*
         |--------------------------------------------------------------------------

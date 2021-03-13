@@ -3,8 +3,8 @@
         <div class="col-12 col-lg-12 col-xl-8 offset-xl-2">
             <div class="row">
                 <div class="col-12 col-xl-12">
-<!--                    <top></top>-->
-                    <constructor :blocks="blocks"></constructor>
+                    <top></top>
+                    <constructor :fields="fields"></constructor>
 <!--                    <bottom></bottom>-->
                 </div>
             </div>
@@ -16,24 +16,26 @@
 
 import {mapGetters} from "vuex";
 import Constructor from './editor/constructor';
+import Top from './editor/top';
 
 export default {
     name: "editor",
     components: {
         constructor: Constructor,
+        top: Top,
     },
     computed: {
-        blocks: {
+        fields: {
             get() {
-                return this.arrBlocks
+                return this.arrFields
             },
             set(value) {
-                this.$store.commit('shuffleBlocks', value)
+                this.$store.commit('shuffleFields', value)
             }
         },
         ...mapGetters({
-            arrBlockTypes: 'getBlockTypes',
-            arrBlocks: 'getBlocks'
+            arrFieldTypes: 'getFieldTypes',
+            arrFields: 'getFields'
         })
     }
 

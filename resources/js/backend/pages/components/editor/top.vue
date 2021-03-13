@@ -1,26 +1,26 @@
 <template>
     <div class="card mb-2">
         <div class="card-body">
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="main_category"><b>Parent page</b></label>
-                        <multiselect
-                            :multiple="false"
-                            :options="arrCategoriesList"
-                            :searchable="true"
-                            id="main_category"
-                            label="name"
-                            placeholder="Select parent page"
-                            selectLabel="Enter for selecting"
-                            selectedLabel="Selected"
-                            track-by="id"
-                            v-model="parent"></multiselect>
-                        <small v-if="!parent" class="text-danger">
-                            Required
-                        </small>
-                    </div>
-                </div>
+<!--            <div class="row">-->
+<!--                <div class="col-6">-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="main_category"><b>Parent page</b></label>-->
+<!--                        <multiselect-->
+<!--                            :multiple="false"-->
+<!--                            :options="arrCategoriesList"-->
+<!--                            :searchable="true"-->
+<!--                            id="main_category"-->
+<!--                            label="name"-->
+<!--                            placeholder="Select parent page"-->
+<!--                            selectLabel="Enter for selecting"-->
+<!--                            selectedLabel="Selected"-->
+<!--                            track-by="id"-->
+<!--                            v-model="parent"></multiselect>-->
+<!--                        <small v-if="!parent" class="text-danger">-->
+<!--                            Required-->
+<!--                        </small>-->
+<!--                    </div>-->
+<!--                </div>-->
 <!--                <div class="col-6">-->
 <!--                    <div class="form-group">-->
 <!--                        <label for="category"><b>Розділ</b></label>-->
@@ -41,12 +41,12 @@
 <!--                            v-model="categories"></multiselect>-->
 <!--                    </div>-->
 <!--                </div>-->
-            </div>
+<!--            </div>-->
             <div class="row">
                 <div class="col-12">
                     <div class="form-group">
                         <label for="title">
-                            <b>Header</b>
+                            <b>Name</b>
                             <small class="text-muted">{{ title_count }} / {{ limit }}</small>
                         </label>
                         <input class="form-control" id="title" type="text" v-model="title">
@@ -74,18 +74,18 @@
 <!--                    </div>-->
 <!--                </div>-->
 <!--            </div>-->
-            <div class="row">
-                <div class="col-12">
-                    <div class="form-group">
-                        <label for="subtitle">
-                            <b>Subheader</b>
-                            <small class="text-muted">{{ subtitle_count }} / {{ limit }}</small>
-                        </label>
-                        <textarea class="form-control" id="subtitle" rows="3"
-                                  v-model="subtitle"></textarea>
-                    </div>
-                </div>
-            </div>
+<!--            <div class="row">-->
+<!--                <div class="col-12">-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="subtitle">-->
+<!--                            <b>Subheader</b>-->
+<!--                            <small class="text-muted">{{ subtitle_count }} / {{ limit }}</small>-->
+<!--                        </label>-->
+<!--                        <textarea class="form-control" id="subtitle" rows="3"-->
+<!--                                  v-model="subtitle"></textarea>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
 
         </div>
     </div>

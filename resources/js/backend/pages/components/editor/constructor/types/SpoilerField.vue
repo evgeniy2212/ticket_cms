@@ -6,24 +6,24 @@
                     <span>Spoiler header</span>
                     <small class="text-muted">{{ titleCount }} / {{ getLimit }}</small>
                 </label>
-                <input @blur="updateBlock"
+                <input @blur="updateField"
                        @keyup="validateTitle"
                        id="title"
                        class="form-control form-control-sm"
                        placeholder="Spoiler header"
-                       type="text" v-model="block.title">
+                       type="text" v-model="field.title">
             </div>
             <div class="form-group">
                 <label for="subtitle">
                     <span>Spoiler subheader</span>
                     <small class="text-muted">{{ subtitleCount }} / {{ getLimit }}</small>
                 </label>
-                <input @blur="updateBlock"
+                <input @blur="updateField"
                        @keyup="validateSubtitle"
                        class="form-control form-control-sm"
                        id="subtitle"
                        placeholder="Spoiler subheader"
-                       type="text" v-model="block.subtitle">
+                       type="text" v-model="field.subtitle">
             </div>
             <div class="form-group">
                 <label for="body">
@@ -32,12 +32,12 @@
                 </label>
                 <textarea
                     id="body"
-                    @blur="updateBlock"
+                    @blur="updateField"
                     @keyup="validateBody"
                     class="form-control form-control-sm"
                     placeholder="Spoiler text"
                     rows="5"
-                          v-model="block.body"></textarea>
+                          v-model="field.body"></textarea>
             </div>
         </div>
     </div>
@@ -49,34 +49,34 @@
     export default {
         name:     "spoiler",
         props:    {
-            block: Object
+            field: Object
         },
         data() {
             return {}
         },
         methods:  {
-            updateBlock() {
-                this.$emit('update', this.block)
+            updateField() {
+                this.$emit('update', this.field)
             },
             validateBody () {
-                return this.block.body = this.block.body.substr(0, this.getLimitBody);
+                return this.field.body = this.field.body.substr(0, this.getLimitBody);
             },
             validateTitle () {
-                return this.block.title = this.block.title.substr(0, this.getLimit);
+                return this.field.title = this.field.title.substr(0, this.getLimit);
             },
             validateSubtitle () {
-                return this.block.subtitle = this.block.subtitle.substr(0, this.getLimit);
+                return this.field.subtitle = this.field.subtitle.substr(0, this.getLimit);
             },
         },
         computed: {
             titleCount() {
-                return this.block && this.block.title ? this.block.title.length : 0;
+                return this.field && this.field.title ? this.field.title.length : 0;
             },
             subtitleCount() {
-                return this.block && this.block.subtitle ? this.block.subtitle.length : 0;
+                return this.field && this.field.subtitle ? this.field.subtitle.length : 0;
             },
             bodyCount() {
-                return this.block && this.block.body ? this.block.body.length : 0;
+                return this.field && this.field.body ? this.field.body.length : 0;
             },
             ...mapGetters([
                               'getErrors',

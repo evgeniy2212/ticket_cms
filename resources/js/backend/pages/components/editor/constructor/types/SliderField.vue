@@ -2,20 +2,20 @@
     <div class="row">
         <div class="col-12">
             <div class="custom-control">
-                <label :for="'name' + block.uid.toString()">
+                <label :for="'name' + field.uid.toString()">
                     <span>Name</span>
                     <small class="text-muted">{{ titleCount }} / {{ getLimit }}</small>
                 </label>
-                <input @change="updateBlock"
+                <input @change="updateField"
                        @keyup="validateTitle"
-                       class="form-control mb-2" :id="'name' + block.uid.toString()" v-model="block.title" type="text">
+                       class="form-control mb-2" :id="'name' + field.uid.toString()" v-model="field.title" type="text">
             </div>
             <div class="custom-control">
-                <label :for="'res' + block.uid.toString()">Sizes</label>
-                <select :id="'res' + block.uid.toString()"
-                        @change="updateBlock"
+                <label :for="'res' + field.uid.toString()">Sizes</label>
+                <select :id="'res' + field.uid.toString()"
+                        @change="updateField"
                         class="form-control mb-2"
-                        v-model="block.resolutionKey">
+                        v-model="field.resolutionKey">
                     <option v-for="(name, key) in getResolutionList"
                             :value="key">
                         {{ name }}
@@ -23,18 +23,18 @@
                 </select>
             </div>
             <div class="pl-5 pb-2 custom-control custom-checkbox">
-                <input @change="updateBlock"
+                <input @change="updateField"
                        type="checkbox"
-                       v-model="block.boolean"
+                       v-model="field.boolean"
                        class="custom-control-input"
-                       :id="block.uid">
-                <label class="custom-control-label" :for="block.uid">
-                    {{ block.boolean ? 'Left cut' : 'Right cut' }}
+                       :id="field.uid">
+                <label class="custom-control-label" :for="field.uid">
+                    {{ field.boolean ? 'Left cut' : 'Right cut' }}
                 </label>
             </div>
             <upload-image is="upload-image"
-                          :input_id="block.uid.toString()"
-                          :block="block"
+                          :input_id="field.uid.toString()"
+                          :field="field"
                           v-on:upload-image-loaded="uploadImageLoaded"
                           v-on:upload-image-clicked="uploadImageClicked"
                           v-on:upload-image-removed="uploadImageRemoved">
@@ -52,27 +52,27 @@
             UploadImage
         },
         props:      {
-            block: Object
+            field: Object
         },
         methods:    {
-            updateBlock() {
-                this.$emit('update', this.block)
+            updateField() {
+                this.$emit('update', this.field)
             },
             uploadImageLoaded:  function (file) {
-                this.block.block_items.push(file);
-                this.updateBlock();
+                this.field.field_items.push(file);
+                this.updateField();
             },
             uploadImageClicked: function (file) {
                 this.$emit('update-news', file)
             },
             uploadImageRemoved: function (file) {
-                this.block.block_items = this.block.block_items.filter(function (item) {
+                this.field.field_items = this.field.field_items.filter(function (item) {
                     return item.name !== file.name;
                 })
-                this.updateBlock();
+                this.updateField();
             },
             validateTitle() {
-                return this.block.title = this.block.title.substr(0, this.getLimit);
+                return this.field.title = this.field.title.substr(0, this.getLimit);
             },
         },
         computed:   {
@@ -82,11 +82,11 @@
                               'getLimit',
                           ]),
             titleCount() {
-                return this.block && this.block.title ? this.block.title.length : 0;
+                return this.field && this.field.title ? this.field.title.length : 0;
             },
         },
         mounted() {
-            this.block.resolutionKey = this.block.resolutionKey ? this.block.resolutionKey : 'lg';
+            this.field.resolutionKey = this.field.resolutionKey ? this.field.resolutionKey : 'lg';
         }
     }
 </script>

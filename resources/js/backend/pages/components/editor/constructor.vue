@@ -7,12 +7,12 @@
                     @start="drag=true"
                     group="people"
                     handle=".drag"
-                    :list="blocks">
-                    <block
-                        :block="block"
-                        :key="block.uid"
-                        v-for="block in blocks">
-                    </block>
+                    :list="fields">
+                    <field
+                        :field="field"
+                        :key="field.uid"
+                        v-for="field in fields">
+                    </field>
                 </draggable>
             </div>
         </div>
@@ -22,7 +22,7 @@
                     <type
                         :key="button.id"
                         :type="button"
-                        v-for="button in arrBlockTypes"></type>
+                        v-for="button in arrFieldTypes"></type>
                 </ul>
             </div>
         </div>
@@ -33,25 +33,25 @@
 import {mapGetters} from "vuex"
 import draggable from 'vuedraggable'
 import Type from './constructor/type';
-import Block from './constructor/block';
+import Field from './constructor/field';
 
 export default {
     name: "constructor",
     props: {
-        blocks: {
+        fields: {
             type: Array,
         },
     },
     components: {
         type: Type,
-        block: Block,
+        field: Field,
         draggable
     },
     computed: {
 
         ...mapGetters({
-            arrBlockTypes: 'getBlockTypes',
-            arrBlocks: 'getBlocks'
+            arrFieldTypes: 'getFieldTypes',
+            arrFields: 'getFields'
         })
     }
 }

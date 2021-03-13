@@ -1,34 +1,39 @@
 <template>
     <div>
         <small class="text-muted">{{ bodyCount }} / {{ getLimitBody }}</small>
-        <textarea @blur="updateBlock"
+        <textarea @blur="updateField"
                   @keyup="validateBody"
-                  class="form-control" placeholder="Текст параграфу" rows="3" v-model="block.body"></textarea>
+                  class="form-control"
+                  placeholder="Текст цитати"
+                  rows="3"
+                  v-model="field.body">
+        </textarea>
     </div>
+
 </template>
 
 <script>
     import {mapGetters} from "vuex";
 
     export default {
-        name:     "paragraph",
+        name:     "quote",
         props:    {
-            block: Object
+            field: Object
         },
         data() {
             return {}
         },
         methods:  {
-            updateBlock() {
-                this.$emit('update', {body: this.block.body})
+            updateField() {
+                this.$emit('update', {body: this.field.body})
             },
             validateBody() {
-                return this.block.body = this.block.body.substr(0, this.getLimitBody);
+                return this.field.body = this.field.body.substr(0, this.getLimitBody);
             },
         },
         computed: {
             bodyCount() {
-                return this.block && this.block.body ? this.block.body.length : 0;
+                return this.field && this.field.body ? this.field.body.length : 0;
             },
             ...mapGetters([
                               'getLimitBody',

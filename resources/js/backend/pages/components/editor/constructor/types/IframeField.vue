@@ -1,35 +1,35 @@
 <template>
     <div class="row">
         <div class="col-12">
-            <label :for="'name' + block.uid.toString()">
+            <label :for="'name' + field.uid.toString()">
                 Назва
                 <small class="text-muted">{{ nameCount }} / {{ getLimit }}</small>
             </label>
-            <input @change="updateBlock"
+            <input @change="updateField"
                    @keyup="validateName"
                    class="form-control mb-2"
-                   :id="'name' + block.uid.toString()"
-                   v-model="block.title"
+                   :id="'name' + field.uid.toString()"
+                   v-model="field.title"
                    type="text">
         </div>
         <div class="col-12">
-            <label :for="'url' + block.uid.toString()">
+            <label :for="'url' + field.uid.toString()">
                 Урл
                 <small class="text-muted">{{ urlCount }} / {{ getDefaultLimit }}</small>
             </label>
-            <input @change="updateBlock"
+            <input @change="updateField"
                    @keyup="validateUrl"
                    class="form-control mb-2"
-                   :id="'url' + block.uid.toString()"
-                   v-model="block.subtitle"
+                   :id="'url' + field.uid.toString()"
+                   v-model="field.subtitle"
                    type="text">
         </div>
         <div class="col-12">
-            <label :for="'res' + block.uid.toString()">Sizes</label>
-            <select :id="'res' + block.uid.toString()"
-                    @change="updateBlock"
+            <label :for="'res' + field.uid.toString()">Sizes</label>
+            <select :id="'res' + field.uid.toString()"
+                    @change="updateField"
                     class="form-control mb-2"
-                    v-model="block.resolutionKey">
+                    v-model="field.resolutionKey">
                 <option v-for="(name, key) in getResolutionList" :value="key">{{ name }}</option>
             </select>
         </div>
@@ -42,17 +42,17 @@ import {mapGetters} from "vuex";
 
 export default {
     props  : {
-        block: Object
+        field: Object
     },
     methods: {
-        updateBlock() {
-            this.$emit('update', this.block)
+        updateField() {
+            this.$emit('update', this.field)
         },
         validateUrl() {
-            return this.block.subtitle = this.block.subtitle.substr(0, this.getDefaultLimit);
+            return this.field.subtitle = this.field.subtitle.substr(0, this.getDefaultLimit);
         },
         validateName() {
-            return this.block.title = this.block.title.substr(0, this.getLimit);
+            return this.field.title = this.field.title.substr(0, this.getLimit);
         },
     },
     computed: {
@@ -62,14 +62,14 @@ export default {
             'getDefaultLimit',
         ]),
         urlCount() {
-            return this.block && this.block.subtitle ? this.block.subtitle.length : 0;
+            return this.field && this.field.subtitle ? this.field.subtitle.length : 0;
         },
         nameCount() {
-            return this.block && this.block.title ? this.block.title.length : 0;
+            return this.field && this.field.title ? this.field.title.length : 0;
         },
     },
     mounted() {
-        this.block.resolutionKey = this.block.resolutionKey ? this.block.resolutionKey : 'lg';
+        this.field.resolutionKey = this.field.resolutionKey ? this.field.resolutionKey : 'lg';
     }
 }
 </script>

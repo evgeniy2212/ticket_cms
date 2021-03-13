@@ -62,9 +62,9 @@
                 <tbody>
                 @forelse($templates as $template)
                     <tr class="@if($loop->iteration  % 2 == 0) even @else odd @endif gradeA">
-                        <td class="f-s-600 text-inverse">{{  $template->firstItem() + $loop->index }}</td>
+                        <td class="f-s-600 text-inverse">{{  $templates->firstItem() + $loop->index }}</td>
                         <td>{{ $template->alias }}</td>
-                        <td>{{ $template->title }}</td>
+                        <td>{{ $template->name }}</td>
                         <td>@if($template->active)
                                 <span class="label label-success">@lang('backend.yes')</span>
                             @else

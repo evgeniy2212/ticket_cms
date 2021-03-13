@@ -84,12 +84,12 @@
     </script>
     <script>
         window.shared = {
-            newsId: null,
+            itemId: null,
             types: @json($field_types),
             categories: @json([]),
             resolutions: @json([]),
             tagSearchRoute: @json([]),
-            newsRoute: @json([]),
+            route: @json(route('backend.pages.store')),
         }
     </script>
 @endsection

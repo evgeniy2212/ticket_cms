@@ -27,12 +27,12 @@ export default {
         return state.content.config.can_comment
     },
     getImageId(state) {
-        return state.content.block_item_id
+        return state.content.field_item_id
     },
     getSubTitle(state) {
         return state.content.subtitle
     },
-    getNewsId(state) {
+    getItemId(state) {
         return state.content.id
     },
     isParsed(state) {
@@ -57,11 +57,11 @@ export default {
         return state.dic.resolutions
     },
     // constructor
-    getBlockTypes(state) {
-        return state.dic.block_types
+    getFieldTypes(state) {
+        return state.dic.field_types
     },
-    getBlocks(state) {
-        return state.content.blocks
+    getFields(state) {
+        return state.content.fields
     },
     // bottom editor
     getTechInfo(state) {

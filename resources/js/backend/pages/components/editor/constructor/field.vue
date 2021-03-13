@@ -6,25 +6,25 @@
                     <span class="btn btn-link drag">
                         <span class="fa fa-bars"></span>
                     </span>
-                    <span class="text-muted">{{ block.name }}</span>
+                    <span class="text-muted">{{ field.name }}</span>
                 </div>
                 <div class="col-7 mt-2 text-right custom-control custom-checkbox">
                     <input type="checkbox"
-                           v-model="block.visible"
+                           v-model="field.visible"
                            class="custom-control-input"
-                           :id="'visible-' + block.uid">
-                    <label class="custom-control-label" :for="'visible-' + block.uid">Show</label>
+                           :id="'visible-' + field.uid">
+                    <label class="custom-control-label" :for="'visible-' + field.uid">Show</label>
                 </div>
                 <div class="col-1 text-right">
-                    <a @click.prevent="deleteCurrentBlock" class="btn btn-link text-danger" href="">
+                    <a @click.prevent="deleteCurrentField" class="btn btn-link text-danger" href="">
                         <span class="fa fa-times-circle"></span>
                     </a>
                 </div>
                 <div class="col-12">
-                    <component :block="block"
+                    <component :field="field"
                                @update-news="updatePages"
-                               @update="updateCurrentBlock"
-                               :is="block.component + '-block'"></component>
+                               @update="updateCurrentField"
+                               :is="field.component + '-field'"></component>
                 </div>
             </div>
         </div>
@@ -33,44 +33,44 @@
 
 <script>
 
-    import ParagraphBlock from './types/ParagraphBlock';
-    import Html5Block from './types/Html5Block';
-    import HeaderBlock from './types/HeaderBlock';
-    import ListBlock from './types/ListBlock';
-    import OpinionBlock from './types/OpinionBlock';
-    import QuoteBlock from './types/QuoteBlock';
-    import SpoilerBlock from './types/SpoilerBlock';
-    import SliderBlock from './types/SliderBlock';
-    import ReadMoreBlock from './types/ReadMoreBlock';
-    import FileBlock from './types/FileBlock';
-    import IframeBlock from './types/IframeBlock';
+    import ParagraphField from './types/ParagraphField';
+    import Html5Field from './types/Html5Field';
+    import HeaderField from './types/HeaderField';
+    import ListField from './types/ListField';
+    import OpinionField from './types/OpinionField';
+    import QuoteField from './types/QuoteField';
+    import SpoilerField from './types/SpoilerField';
+    import SliderField from './types/SliderField';
+    import ReadMoreField from './types/ReadMoreField';
+    import FileField from './types/FileField';
+    import IframeField from './types/IframeField';
     import {mapMutations} from 'vuex';
 
     export default {
-        name:       "block",
+        name:       "field",
         props:      {
-            block: Object
+            field: Object
         },
         components: {
-            ParagraphBlock,
-            Html5Block,
-            HeaderBlock,
-            ListBlock,
-            OpinionBlock,
-            QuoteBlock,
-            SliderBlock,
-            ReadMoreBlock,
-            SpoilerBlock,
-            IframeBlock,
-            FileBlock
+            ParagraphField,
+            Html5Field,
+            HeaderField,
+            ListField,
+            OpinionField,
+            QuoteField,
+            SliderField,
+            ReadMoreField,
+            SpoilerField,
+            IframeField,
+            FileField
         },
         methods:    {
             ...mapMutations([
-                                'deleteBlock',
-                                'updateBlock',
+                                'deleteField',
+                                'updateField',
                                 'setImage',
                             ]),
-            deleteCurrentBlock() {
+            deleteCurrentField() {
                 this.$swal({
                                title:               'Are you sure that you want to delete?',
                                type:                'warning',
@@ -81,13 +81,13 @@
                                showLoaderOnConfirm: true
                            }).then((result) => {
                     if (result.value) {
-                        this.deleteBlock(this.block);
+                        this.deleteField(this.field);
                     }
                 });
             },
-            updateCurrentBlock(value) {
-                this.updateBlock({
-                                     block: this.block,
+            updateCurrentField(value) {
+                this.updateField({
+                                     field: this.field,
                                      value: value
                                  })
             },

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex, {mapGetters, mapActions} from 'vuex'
 import {store} from './store/store'
+import {axios} from "../axios";
 import ActionBar from './components/action-bar';
 import Editor from './components/editor';
 import Settings from './components/settings';
@@ -13,6 +14,7 @@ new Vue({
     el: '#app',
     name: 'PageConstructor',
     store,
+    axios,
     components: {
         ActionBar,
         Editor,
@@ -25,6 +27,7 @@ new Vue({
     },
     methods: {
         ...mapActions([
+            'fetchItems'
         ])
     }
 });

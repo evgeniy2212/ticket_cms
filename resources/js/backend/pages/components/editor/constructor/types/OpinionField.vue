@@ -5,8 +5,8 @@
                 Author photo
             </label>
             <upload-image is="upload-image"
-                          :input_id="block.uid.toString()"
-                          :block="block"
+                          :input_id="field.uid.toString()"
+                          :field="field"
                           :max_files="1"
                           v-on:upload-image-loaded="uploadImageLoaded"
                           v-on:upload-image-clicked="uploadImageClicked"
@@ -25,7 +25,7 @@
                     <div class="form-group">
                         <small class="text-muted">{{ bodyCount }} / {{ getDefaultLimit }}</small>
                         <textarea @keyup="validateBody" class="form-control form-control-sm" placeholder="Думка" rows="3"
-                                  v-model="block.body"></textarea>
+                                  v-model="field.body"></textarea>
                     </div>
                 </div>
             </div>
@@ -39,36 +39,36 @@ import {mapGetters} from "vuex";
 
 export default {
     props  : {
-        block: Object
+        field: Object
     },
     components: {
         UploadImage
     },
     methods: {
-        updateBlock() {
-            this.$emit('update', this.block)
+        updateField() {
+            this.$emit('update', this.field)
         },
         uploadImageLoaded : function (file) {
-            this.block.block_items.push(file);
-            this.block.resolutionKey = 'opinion';
-            this.updateBlock();
+            this.field.field_items.push(file);
+            this.field.resolutionKey = 'opinion';
+            this.updateField();
         },
         uploadImageClicked: function (file) {
             this.$emit('update-news', file)
         },
         uploadImageRemoved: function (file) {
-            this.block.block_items =  this.block.block_items.filter(function (item) {
+            this.field.field_items =  this.field.field_items.filter(function (item) {
                 return item.name !== file.name;
             })
-            this.updateBlock();
+            this.updateField();
         },
         validateBody() {
-            return this.block.body = this.block.body.substr(0, this.getDefaultLimit);
+            return this.field.body = this.field.body.substr(0, this.getDefaultLimit);
         },
     },
     computed: {
         bodyCount() {
-            return this.block && this.block.body ? this.block.body.length : 0;
+            return this.field && this.field.body ? this.field.body.length : 0;
         },
         ...mapGetters([
                           'getDefaultLimit',

@@ -12,7 +12,7 @@ export default {
     },
     // dictionaries passed from laravel
     dic:     {
-        block_types: window.shared.types,
+        field_types: window.shared.types,
         categories:  window.shared.categories,
         authors:     window.shared.authors,
         resolutions: window.shared.resolutions,
@@ -22,7 +22,7 @@ export default {
     },
     // main object data sent to backend
     content: {
-        id:              window.shared.newsId,
+        id:              window.shared.itemId,
         parent:          '',
         alias:           '',
         pub_date:        new Date(),
@@ -33,7 +33,7 @@ export default {
         categories:      [],
         tags:            [],
         author:          '',
-        blocks:          [],
+        fields:          [],
         config:          {
             visibility:     0,
             lenta:          false,

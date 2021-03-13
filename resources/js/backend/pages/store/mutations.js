@@ -40,7 +40,7 @@ export default {
             tech: value
         };
     },
-    setNewsId(state, value) {
+    setItemId(state, value) {
         state.content = {
             ...state.content,
             id: value
@@ -59,39 +59,39 @@ export default {
         };
     },
     // constructor
-    pushBlock(state, type) {
+    pushField(state, type) {
         if (type !== undefined) {
-            let block = {
+            let field = {
                 uid          : Math.floor(Math.random() * 1000) + 1,
                 component    : type.component,
-                block_type_id: type.id,
+                field_type_id: type.id,
                 icon         : type.icon,
                 name         : type.name,
                 body         : type.template,
                 visible      : type.visible !== undefined && type.visible !== null ? type.visible : true,
-                block_items  : [],
+                field_items  : [],
             };
-            state.content.blocks.push(block);
+            state.content.fields.push(field);
         }
     },
-    shuffleBlocks(state, value) {
+    shuffleFields(state, value) {
         state.content = {
             ...state.content,
-            blocks: value
+            fields: value
         }
     },
-    deleteBlock(state, value) {
+    deleteField(state, value) {
         state.content = {
             ...state.content,
-            blocks: state.content.blocks.filter((item) => {
+            fields: state.content.fields.filter((item) => {
                 return item.uid !== value.uid
             })
         }
     },
-    updateBlock(state, payload) {
-        let {block, value} = payload
-        state.content.blocks = state.content.blocks.map(function (item) {
-            if(item.uid === block.uid){
+    updateField(state, payload) {
+        let {field, value} = payload
+        state.content.fields = state.content.fields.map(function (item) {
+            if(item.uid === field.uid){
                 return item = {
                     ...item,
                     ...value
