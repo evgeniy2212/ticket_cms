@@ -13,6 +13,27 @@ class TemplateProvider
     private $pageTemplate;
 
     /**
+     * @var FieldProvider
+     */
+    private $fieldProvider;
+
+    /**
+     * @param FieldProvider $fieldProvider
+     */
+    public function __construct(FieldProvider $fieldProvider)
+    {
+        $this->fieldProvider = $fieldProvider;
+    }
+
+    /**
+     * @return PageTemplate
+     */
+    public function getTemplate(): PageTemplate
+    {
+        return $this->pageTemplate;
+    }
+
+    /**
      * @param array $data
      * @param array $fields
      *
@@ -20,7 +41,6 @@ class TemplateProvider
      */
     public function storeTemplate(array $data, array $fields = [])
     {
-//        dd($data, $fields);
         $this->pageTemplate = PageTemplate::create([
             'alias' => $data['alias'],
             'name' => $data['name'],
@@ -42,12 +62,14 @@ class TemplateProvider
      */
     private function storeFields(array $fields): TemplateProvider
     {
-//        $this->removeFields(Arr::pluck($fields, 'field_type_id'));
+//        dd($fields);
+        $this->removeFields(Arr::pluck($fields, 'field_type_id'));
         $renderBody = '';
-        dd($fields);
+//        dd($fields);
         foreach ($fields as $field) {
-            $renderBody .= $this->blockRepository->store($this->pageTemplate, $field);
+            $renderBody .= $this->fieldProvider->store($this->pageTemplate, $field);
         }
+//        dd($renderBody);
         $this->pageTemplate->body = $renderBody;
 //        $this->news->block_item_id = Str::isUuid($this->news->block_item_id) ? $this->news->block_item_id : null;
         $this->pageTemplate->save();
@@ -56,11 +78,12 @@ class TemplateProvider
     }
 
     /**
-     * @param array $newFieldIds
+     * @param array $newFieldTypeIds
      */
-    public function removeFields(array $newFieldIds)
+    public function removeFields(array $newFieldTypeIds)
     {
-        $this->pageTemplate->fields->whereNotIn('id', $newFieldIds)
+//        dd($this->pageTemplate->fields, $newFieldTypeIds);
+        $this->pageTemplate->fields->whereNotIn('field_type_id', $newFieldTypeIds)
             ->map(function ($field) {
 //                $field->blockItems->map(function ($blockItem) {
 //                    Storage::disk('public')->delete(BlockItem::IMAGES_PATH . $blockItem->id);

@@ -46,11 +46,10 @@ class PageTemplateController extends Controller
      */
     public function store(CreateRequest $request, TemplateProvider $provider)
     {
-//        dd($request->validated());
         $provider
             ->storeTemplate($request->items, $request->fields);
 
-        return response()->json(['templates' => $provider->getTemplates()]);
+        return response()->json(['templates' => $provider->getTemplate()]);
     }
 
     /**
@@ -61,7 +60,13 @@ class PageTemplateController extends Controller
      */
     public function show($id)
     {
-        //
+        return PageTemplate::find($id)->load([
+            'fields.type',
+            'fields.fieldItems' => function ($q) {
+                return $q->orderBy('id', 'ASC');
+            },
+        ])
+            ->toJson();
     }
 
     /**
@@ -72,7 +77,12 @@ class PageTemplateController extends Controller
      */
     public function edit($id)
     {
-        //
+//        dd(PageTemplate::find($id)->fields);
+        return view('backend.templates.edit', [
+            'itemId' => $id,
+            'field_types' => FieldType::all(),
+            'template' => PageTemplate::find($id),
+        ]);
     }
 
     /**
@@ -87,14 +97,14 @@ class PageTemplateController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        PageTemplate::destroy($id);
+
+        if ($request->wantsJson()) {
+            return response()->json(['redirectUrl' => route('backend.templates.index')]);
+        } else {
+            return redirect()->route('backend.templates.index');
+        }
     }
 }

@@ -61,6 +61,7 @@ export default {
         return state.dic.field_types
     },
     getFields(state) {
+        console.log(state.content);
         return state.content.fields
     },
     // bottom editor

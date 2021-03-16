@@ -14,6 +14,7 @@ class CreateRequest extends FormRequest
      */
     public function rules()
     {
+//        dd(request()->all());
         return [
             'fields.*.body'               => [
                 'nullable',
@@ -31,6 +32,7 @@ class CreateRequest extends FormRequest
                 'max:255',
             ],
             'fields.*.field_items.*.name' => [
+                'nullable',
                 'string',
                 'max:255',
             ],

@@ -165,6 +165,7 @@ export default {
         }
     },
     setContent(state, value) {
+        console.log('setContent', value);
         state.content = value;
     },
     setErrors(state, value) {

@@ -239,6 +239,7 @@
         'create_new_page'               => 'Create new page',
         'create_new_template'           => 'Create new template',
         'edit_page'                     => 'Edit Page',
+        'edit_template'                 => 'Edit Template',
         'create_page'                   => 'Create Page',
         'create_template'               => 'Create Template',
         'main_page'                     => 'Main page',

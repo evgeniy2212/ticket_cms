@@ -6,8 +6,6 @@ export default {
         try {
             const data = await dispatch('serializeContentData', state.content);
             dispatch('preloader');
-            console.log(window.shared.route);
-            console.log(data);
             // axios.get('https://api.github.com/users/benjamingeorge')
             //     .then(function (res) {
             //         console.log(res.data);
@@ -52,13 +50,15 @@ export default {
                 dispatch('preloader');
             }
             const response = await axios.get(window.shared.route + '/' + inputData.id);
+            console.log('response: ', response);
             const data = await dispatch('deSerializeResponseData', response.data);
             commit('setContent', data)
             if (!inputData.silent) {
                 Vue.swal().close()
             }
             commit('setErrors', {})
-        } catch (response) {
+        }
+        catch (response) {
             console.warn(response)
             commit('setErrors', response.data.errors);
             Vue.swal().close()
@@ -149,51 +149,51 @@ export default {
         };
     },
     async deSerializeResponseData({state}, data) {
-        let parent = data.categories.filter(category => category.pivot.is_main === 1).shift();
-        let categories = data.categories.filter(category => category.pivot.is_main === 0);
+        // let parent = data.categories.filter(category => category.pivot.is_main === 1).shift();
+        // let categories = data.categories.filter(category => category.pivot.is_main === 0);
 
         return {
             id:              data.id,
             alias:           data.alias,
-            parent:          parent,
-            author:          data.author,
-            pub_date:        new Date(data.pub_date),
-            pub_by_schedule: data.pub_by_schedule,
-            title:           data.name,
-            subtitle:        data.subtitle,
-            field_item_id:   data.field_item_id,
-            tech:            data.tech,
-            description:     data.description,
-            config:          {
-                enable_comments: data.can_comment,
-                hide_author:     data.hide_author,
-                lenta:           data.lenta,
-                top_lenta:       data.top_lenta,
-                main_primary:    data.main_primary,
-                main_secondary:  data.main_secondary,
-                visibility:      data.visibility,
-                parsed:          data.parsed,
+            // parent:          parent,
+            // author:          data.author,
+            // pub_date:        new Date(data.pub_date),
+            // pub_by_schedule: data.pub_by_schedule,
+            // title:           data.name,
+            // subtitle:        data.subtitle,
+            // field_item_id:   data.field_item_id,
+            // tech:            data.tech,
+            // description:     data.description,
+            config: {
+            //     enable_comments: data.can_comment,
+            //     hide_author:     data.hide_author,
+            //     lenta:           data.lenta,
+            //     top_lenta:       data.top_lenta,
+            //     main_primary:    data.main_primary,
+            //     main_secondary:  data.main_secondary,
+                visibility:      true,
+            //     parsed:          data.parsed,
             },
-            categories:      categories,
-            tags:            data.tags,
+            // categories:      categories,
+            // tags:            data.tags,
             fields:          data.fields
                                  .sort((a, b) => a.position - b.position)
                                  .map(function (field, index) {
                                      return {
                                          id:            field.id,
-                                         uid:           Math.floor(Math.random() * 10000) + 1,
-                                         body:          field.body,
-                                         title:         field.title,
-                                         subtitle:      field.subtitle,
+                                         // uid:           Math.floor(Math.random() * 10000) + 1,
+                                         // body:          field.body,
+                                         // title:         field.title,
+                                         // subtitle:      field.subtitle,
                                          field_items:   field.field_items,
-                                         boolean:       field.boolean,
+                                         // boolean:       field.boolean,
                                          visible:       field.visible,
                                          position:      field.position,
                                          component:     field.type.component,
                                          name:          field.type.name,
                                          field_type_id: field.field_type_id,
                                          icon:          field.type.icon,
-                                         resolutionKey: field.resolutionKey,
+                                         // resolutionKey: field.resolutionKey,
                                      }
                                  }),
         };

@@ -29,6 +29,17 @@ new Vue({
         ...mapActions([
             'fetchItems'
         ])
+    },
+    created() {
+        if (window.shared.itemId) {
+            this.fetchItems(
+                {
+                    id:     window.shared.itemId,
+                    silent: false
+                }
+            );
+        }
+
     }
 });
 

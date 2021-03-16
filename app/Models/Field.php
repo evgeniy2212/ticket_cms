@@ -5,28 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class Field extends Model implements TranslatableContract
+class Field extends Model
 {
-    use Translatable;
-
-    public const COMPONENT_PARAGRAPH = 'paragraph';
-    public const COMPONENT_HEADER    = 'header';
-    public const COMPONENT_HTML      = 'html5';
-    public const COMPONENT_QUOTE     = 'quote';
-    public const COMPONENT_LIST      = 'list';
-    public const COMPONENT_OPINION   = 'opinion';
-    public const COMPONENT_SLIDER    = 'slider';
-    public const COMPONENT_READ_MORE = 'read-more';
-    public const COMPONENT_SPOILER   = 'spoiler';
-    public const COMPONENT_IFRAME    = 'iframe';
-    public const COMPONENT_FILE       = 'file';
-
     protected $guarded = [];
 
-    public $translatedAttributes = ['title', 'subtitle', 'body'];
+    public function model(): MorphTo
+    {
+        return $this->morphTo();
+    }
 
-    public $with = [
-        'translations',
-    ];
+    public function fieldItems(): HasMany
+    {
+        return $this->hasMany(FieldItem::class);
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(FieldType::class, 'field_type_id');
+    }
 }

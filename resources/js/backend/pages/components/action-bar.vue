@@ -79,8 +79,8 @@
                               getVisibility:    'getVisibility',
                           }),
             canSave () {
-                // return this.getAlias && this.getTitle && this.getParent;
-                return true;
+                return this.getTitle;
+                // return true;
             },
             showUrl() {
                 return this.getAlias ? '/' + this.getAlias + '?preview' : '#';

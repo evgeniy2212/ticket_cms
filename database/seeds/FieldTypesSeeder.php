@@ -17,32 +17,32 @@ class FieldTypesSeeder extends Seeder
             [
                 'name'      => 'Header',
                 'icon'      => 'heading',
-                'component' => Field::COMPONENT_HEADER,
+                'component' => FieldType::COMPONENT_HEADER,
             ],
             [
                 'name'      => 'List',
                 'icon'      => 'list',
-                'component' => Field::COMPONENT_LIST,
+                'component' => FieldType::COMPONENT_LIST,
             ],
             [
                 'name'      => 'HTML5',
                 'icon'      => 'html',
-                'component' => Field::COMPONENT_HTML,
+                'component' => FieldType::COMPONENT_HTML,
             ],
             [
                 'name'      => 'Image',
                 'icon'      => 'file-image',
-                'component' => Field::COMPONENT_SLIDER,
+                'component' => FieldType::COMPONENT_SLIDER,
             ],
             [
                 'name'      => 'File',
                 'icon'      => 'file',
-                'component' => Field::COMPONENT_FILE,
+                'component' => FieldType::COMPONENT_FILE,
             ],
             [
                 'name'      => 'Iframe',
                 'icon'      => 'info-circle',
-                'component' => Field::COMPONENT_IFRAME,
+                'component' => FieldType::COMPONENT_IFRAME,
             ],
         ];
 

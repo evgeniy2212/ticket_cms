@@ -10,13 +10,13 @@
     <!-- begin breadcrumb -->
     <ol class="breadcrumb float-xl-right">
         <li class="breadcrumb-item"><a href="{{ route('backend.dashboard') }}">@lang('backend.dashboard')</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('backend.pages.index') }}">@lang('backend.pages')</a></li>
-        <li class="breadcrumb-item active">@lang('backend.edit_page')</li>
+        <li class="breadcrumb-item"><a href="{{ route('backend.pages.index') }}">@lang('backend.templates')</a></li>
+        <li class="breadcrumb-item active">@lang('backend.edit_template')</li>
     </ol>
     <!-- end breadcrumb -->
 
     <!-- begin page-header -->
-    <h1 class="page-header">@lang('backend.edit_page') </h1>
+    <h1 class="page-header">@lang('backend.edit_template') </h1>
     <!-- end page-header -->
 
     <!-- begin panel -->
@@ -36,22 +36,16 @@
 
     <!-- begin panel-body -->
         <div class="panel-body">
-            {!! Form::model($template, [
-                'url' => route('backend.templates.update',
-                ['template'=> $template]),
-                'class' => 'form-horizontal',
-                'method'=>'PUT',
-                'data-parsley-validate',
-                'autocomplete'=>'off'
-            ]) !!}
-            @include('backend.pages.fields')
-            {!! Form::close() !!}
+            <div id="app" class="news-block"  class="mb-5">
+                <action-bar></action-bar>
+                <editor v-show="showEditor"></editor>
+            </div>
         </div>
         <!-- end panel-body -->
     </div>
     <!-- end panel -->
 @endsection
-
+@section('js', 'templates')
 @section('scripts')
     <script src="{{ asset('assets/plugins/parsleyjs/dist/parsley.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/summernote/dist/summernote.min.js') }}"></script>
@@ -77,5 +71,13 @@
         $(document).ready(function() {
             FormSummernote.init();
         });
+    </script>
+    <script>
+        window.shared = {
+            itemId: @json($itemId),
+            types: @json($field_types),
+            resolutions: @json($template),
+            route: @json(route('backend.templates.store')),
+        }
     </script>
 @endsection
