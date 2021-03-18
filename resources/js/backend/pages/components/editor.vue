@@ -31,7 +31,7 @@ export default {
                 return this.arrFields
             },
             set(value) {
-                console.log('set');
+                // console.log('set');
                 this.$store.commit('shuffleFields', value)
             }
         },

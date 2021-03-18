@@ -33,6 +33,4 @@
             }
             return view('frontend.page', ['page' => $page]);
         }
-
-
     }

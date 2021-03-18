@@ -36,22 +36,16 @@
 
     <!-- begin panel-body -->
         <div class="panel-body">
-            {!! Form::model($page, [
-                'url' => route('backend.pages.update',
-                ['page'=> $page]),
-                'class' => 'form-horizontal',
-                'method'=>'PUT',
-                'data-parsley-validate',
-                'autocomplete'=>'off'
-            ]) !!}
-            @include('backend.pages.fields')
-            {!! Form::close() !!}
+            <div id="app" class="news-block"  class="mb-5">
+                <action-bar></action-bar>
+                <editor v-show="showEditor"></editor>
+            </div>
         </div>
         <!-- end panel-body -->
     </div>
     <!-- end panel -->
 @endsection
-
+@section('js', 'pages')
 @section('scripts')
     <script src="{{ asset('assets/plugins/parsleyjs/dist/parsley.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/summernote/dist/summernote.min.js') }}"></script>
@@ -77,5 +71,13 @@
         $(document).ready(function() {
             FormSummernote.init();
         });
+    </script>
+    <script>
+        window.shared = {
+            itemId: @json($itemId),
+            types: @json($field_types),
+            resolutions: @json($page),
+            route: @json(route('backend.pages.store')),
+        }
     </script>
 @endsection

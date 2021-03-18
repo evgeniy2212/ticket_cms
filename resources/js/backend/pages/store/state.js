@@ -16,6 +16,7 @@ export default {
         categories:  window.shared.categories,
         authors:     window.shared.authors,
         resolutions: window.shared.resolutions,
+        templates: window.shared.templates,
     },
     errors: {
 
@@ -31,6 +32,7 @@ export default {
         subtitle:        '',
         tech:            '',
         categories:      [],
+        template:        '',
         tags:            [],
         author:          '',
         fields:          [],

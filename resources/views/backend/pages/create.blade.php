@@ -86,6 +86,7 @@
         window.shared = {
             itemId: null,
             types: @json($field_types),
+            templates: @json($templates),
             categories: @json([]),
             resolutions: @json([]),
             tagSearchRoute: @json([]),

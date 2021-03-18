@@ -24,15 +24,27 @@
          */
         public function rules()
         {
-            $rules['alias']  = [
-                'nullable',
-                'max:255',
-                'regex:/[' . config('app.alias_chars') . ']*/',
-                'unique:pages,alias,' . request()->page . ',id',
+            return [
+                'fields.*.body'               => [
+                    'nullable',
+                    'string',
+                    'max:65535',
+                ],
+                'fields.*.title'              => [
+                    'nullable',
+                    'string',
+                    'max:255',
+                ],
+                'fields.*.subtitle'           => [
+                    'nullable',
+                    'string',
+                    'max:255',
+                ],
+                'fields.*.field_items.*.name' => [
+                    'nullable',
+                    'string',
+                    'max:255',
+                ],
             ];
-            $rules['title']  = 'required';
-            $rules['active'] = 'required|boolean';
-
-            return $rules;
         }
     }

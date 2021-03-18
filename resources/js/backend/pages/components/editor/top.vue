@@ -56,24 +56,24 @@
                     </div>
                 </div>
             </div>
-<!--            <div class="row">-->
-<!--                <div class="col-12">-->
-<!--                    <div class="form-group">-->
-<!--                        <label for="author"><b>Автор</b></label>-->
-<!--                        <multiselect-->
-<!--                            :custom-label="optionAuthor"-->
-<!--                            :options="arrAuthors"-->
-<!--                            :searchable="true"-->
-<!--                            id="author"-->
-<!--                            label="name"-->
-<!--                            placeholder="Оберiть автора"-->
-<!--                            selectLabel="Enter щоб обрати"-->
-<!--                            selectedLabel="Обраний"-->
-<!--                            track-by="id"-->
-<!--                            v-model="author"></multiselect>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+            <div class="row" v-if="canTemplateChose">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="templates"><b>Templates</b></label>
+                        <multiselect
+                            :custom-label="optionTemplate"
+                            :options="templateList"
+                            :searchable="true"
+                            id="templates"
+                            label="name"
+                            placeholder="Chose template"
+                            selectLabel="Enter for chosing"
+                            selectedLabel="Chosed"
+                            track-by="id"
+                            v-model="template"></multiselect>
+                    </div>
+                </div>
+            </div>
 <!--            <div class="row">-->
 <!--                <div class="col-12">-->
 <!--                    <div class="form-group">-->
@@ -143,26 +143,42 @@ export default {
         },
         categories: {
             get() {
-                return this.arrCategories
+                return this.templateList
             },
             set(value) {
                 this.$store.commit('setCategories', value)
             }
         },
+        template: {
+            get() {
+                console.log('setTemplate: ', this.getTemplate);
+                return this.getTemplate
+            },
+            set(value) {
+                console.log('setTemplate: ', value);
+                this.$store.commit('setTemplate', value)
+            }
+        },
         ...mapGetters({
             textTitle: 'getTitle',
             textSubTitle: 'getSubTitle',
+            template: 'getTemplate',
             arrCategories: 'getCategories',
             arrCategoriesList: 'getCategoriesList',
             arrAuthors: 'getAuthorsList',
             objAuthor: 'getAuthor',
             limit: 'getLimit',
-            getParent: 'getParent'
-        })
+            getParent: 'getParent',
+            templateList: 'getTemplatesList'
+        }),
+        canTemplateChose() {
+            return this.templateList;
+        },
     },
     methods: {
-        optionAuthor({name_last, name_first}) {
-            return `${name_last} ${name_first}`
+        optionTemplate({name}) {
+            console.log('name', name);
+            return `${name}`
         },
     }
 }

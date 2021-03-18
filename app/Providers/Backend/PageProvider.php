@@ -2,15 +2,17 @@
 
 namespace App\Providers\Backend;
 
+use App\Models\Page;
 use App\Models\PageTemplate;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
 
-class TemplateProvider
+class PageProvider
 {
     /**
-     * @var PageTemplate
+     * @var Page
      */
-    private $pageTemplate;
+    private $page;
 
     /**
      * @var FieldProvider
@@ -26,11 +28,11 @@ class TemplateProvider
     }
 
     /**
-     * @return PageTemplate
+     * @return Page
      */
-    public function getTemplate(): PageTemplate
+    public function getPage(): Page
     {
-        return $this->pageTemplate;
+        return $this->page;
     }
 
     /**
@@ -39,11 +41,16 @@ class TemplateProvider
      *
      * @return
      */
-    public function storeTemplate(array $data, array $fields = [])
+    public function storePage(array $data, array $fields = [])
     {
-        $this->pageTemplate = PageTemplate::create([
+//        dd($data);
+        $this->page = Page::create([
             'alias' => $data['alias'],
-            'name' => $data['name'],
+            'page_template_id' => PageTemplate::first()->id,
+            App::getLocale() => [
+                'name' => $data['name'],
+                'url' => $data['alias'],
+            ]
         ]);
         $this->storeFields($fields);
 
@@ -53,20 +60,21 @@ class TemplateProvider
     /**
      * @param array $fields
      *
-     * @return TemplateProvider
+     * @return PageProvider
      */
-    private function storeFields(array $fields): TemplateProvider
+    private function storeFields(array $fields): PageProvider
     {
 //        dd($fields);
         $this->removeFields(Arr::pluck($fields, 'field_type_id'));
         $renderBody = '';
 
+
         foreach ($fields as $field) {
-            $renderBody .= $this->fieldProvider->store($this->pageTemplate, $field);
+            $renderBody .= $this->fieldProvider->store($this->page, $field);
         }
-//        dd($renderBody);
-        $this->pageTemplate->body = $renderBody;
-        $this->pageTemplate->save();
+
+        $this->page->body = $renderBody;
+        $this->page->save();
 
         return $this;
     }
@@ -77,7 +85,7 @@ class TemplateProvider
     public function removeFields(array $newFieldTypeIds)
     {
 //        dd($this->pageTemplate->fields, $newFieldTypeIds);
-        $this->pageTemplate->fields->whereNotIn('field_type_id', $newFieldTypeIds)
+        $this->page->fields->whereNotIn('field_type_id', $newFieldTypeIds)
             ->map(function ($field) {
 //                $field->blockItems->map(function ($blockItem) {
 //                    Storage::disk('public')->delete(BlockItem::IMAGES_PATH . $blockItem->id);

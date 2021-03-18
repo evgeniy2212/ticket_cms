@@ -34,22 +34,34 @@ class CreateFieldsTable extends Migration
             $table
                 ->foreign('field_type_id')
                 ->references('id')
-                ->on('field_types')
-                ->nullOnDelete();
+                ->on('field_types');
         });
 
-        Schema::create('field_translations', function (Blueprint $table) {
+        Schema::create('field_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('field_id');
-            $table->string('title')->nullable();
-            $table->string('subtitle')->nullable()->comment('for iframe type it will be url');
-            $table->mediumText('body')->nullable()->comment('ready page layout');
-            $table->string('locale')->index();
+            $table->string('name')->nullable();
+            $table->unsignedMediumInteger('position')->default(0);
 
-            $table->unique(['field_id', 'locale']);
-            $table->foreign('field_id')
+            $table
+                ->foreign('field_id')
                 ->references('id')
                 ->on('fields')
+                ->cascadeOnDelete();
+        });
+
+        Schema::create('field_item_translations', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('field_item_id');
+            $table->string('title')->nullable();
+            $table->string('subtitle')->nullable()->comment('for iframe type it will be url');
+            $table->longText('body')->nullable()->comment('ready page layout');
+            $table->string('locale')->index();
+
+            $table->unique(['field_item_id', 'locale']);
+            $table->foreign('field_item_id')
+                ->references('id')
+                ->on('field_items')
                 ->onDelete('cascade');
         });
     }
@@ -61,7 +73,8 @@ class CreateFieldsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('field_translations');
+        Schema::dropIfExists('field_item_translations');
+        Schema::dropIfExists('field_items');
         Schema::dropIfExists('fields');
         Schema::dropIfExists('field_types');
     }

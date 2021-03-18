@@ -6,22 +6,16 @@
     use App\Http\Requests\Backend\Page\PageRequest;
     use App\Models\FieldType;
     use App\Models\Page;
+    use App\Models\PageTemplate;
+    use App\Providers\Backend\PageProvider;
     use Illuminate\Http\RedirectResponse;
+    use Illuminate\Http\Request;
     use Illuminate\View\View;
 
     class PagesController extends Controller
     {
-
-        public function __construct()
-        {
-            $this->middleware('permission:list pages', ['only' => ['index']]);
-            $this->middleware('permission:add pages', ['only' => ['create', 'store']]);
-            $this->middleware('permission:edit pages', ['only' => ['edit', 'update']]);
-            $this->middleware('permission:delete pages', ['only' => ['destroy', 'restore']]);
-        }
-
         /**
-         * Show all templates of emails
+         * Show all pages
          *
          * @return View
          */
@@ -36,43 +30,32 @@
         }
 
         /**
-         * Editing of select template email
+         * Editing of select page
          *
          * @param $page
          *
          * @return View
          */
-        public function edit($page)
+        public function edit($id)
         {
-            $page = Page::find($page);
-
+//            dd(Page::find($id));
             return view('backend.pages.edit', [
-                'page' => $page,
+                'itemId' => $id,
+                'field_types' => FieldType::all(),
+                'page' => Page::find($id),
             ]);
         }
 
         /**
          * Update of select template email
          *
-         * @param PageRequest $request
-         * @param int         $page
-         *
-         * @return RedirectResponse
+         * @param  \Illuminate\Http\Request  $request
+         * @param  int  $id
+         * @return \Illuminate\Http\Response
          */
-        public function update(PageRequest $request, $page)
+        public function update(PageRequest $request, $id)
         {
-            $page         = Page::find($page);
-            $page->alias  = $request->alias;
-            $page->title  = $request->title;
-            $page->text   = $request->text;
-            $page->active = $request->active ? $request->active : 0;
-            $page->save();
-
-            return redirect(
-                $request->get('action') == 'continue'
-                    ? route('backend.pages.edit', ['page' => $page])
-                    : route('backend.pages.index')
-            )->with('success', ['text' => __('backend.page_updated')]);
+            dd('soon');
         }
 
         /**
@@ -84,46 +67,76 @@
         {
             return view('backend.pages.create', [
                 'field_types' => FieldType::all(),
+                'templates' => PageTemplate::all(),
             ]);
         }
 
         /**
          * Create the template email
          *
-         *
          * @param PageRequest $request
+         * @param PageProvider $provider
          *
          * @return RedirectResponse
          */
-        public function store(PageRequest $request)
+        public function store(PageRequest $request, PageProvider $provider)
         {
-            $page         = new Page();
-            $page->alias  = $request->alias;
-            $page->title  = $request->title;
-            $page->text   = $request->text;
-            $page->active = $request->active ? $request->active : 0;
-            $page->type   = Page::TYPE_BASIC;
-            $page->save();
+            $provider
+                ->storePage($request->items, $request->fields);
 
-            return redirect(
-                $request->get('action') == 'continue'
-                    ? route('backend.pages.edit', ['page' => $page])
-                    : route('backend.pages.index')
-            )->with('success', ['text' => __('backend.page_created')]);
+            return response()->json(['pages' => $provider->getPage()]);
+        }
+
+        /**
+         * Display the specified resource.
+         *
+         * @param  int  $id
+         * @return \Illuminate\Http\Response
+         */
+        public function show($id)
+        {
+            return Page::find($id)->load([
+                'fields.type',
+                'fields.fieldItems' => function ($q) {
+                    return $q->orderBy('id', 'ASC');
+                },
+            ])
+                ->toJson();
+        }
+
+        /**
+         * Display the specified resource.
+         *
+         * @param  int  $id
+         * @return \Illuminate\Http\Response
+         */
+        public function preview($id)
+        {
+            return Page::find($id)->load([
+                'fields.type',
+                'fields.fieldItems' => function ($q) {
+                    return $q->orderBy('id', 'ASC');
+                },
+            ])
+                ->toJson();
         }
 
         /**
          * Remove the specified resource from storage.
          *
-         * @param int $page
+         * @param Request $request
+         * @param $id
          *
-         * @return RedirectResponse
          */
-        public function destroy($page)
+        public function destroy(Request $request, $id)
         {
-            Page::destroy($page);
-            return redirect()->route('backend.pages.index')
-                ->with('success', ['text' => __('backend.page_deleted')]);
+            Page::destroy($id);
+
+            if ($request->wantsJson()) {
+                return response()->json(['redirectUrl' => route('backend.pages.index')]);
+            } else {
+                return redirect()->route('backend.pages.index');
+            }
         }
 
     }

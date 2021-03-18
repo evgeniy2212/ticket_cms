@@ -159,7 +159,7 @@ export default {
             // author:          data.author,
             // pub_date:        new Date(data.pub_date),
             // pub_by_schedule: data.pub_by_schedule,
-            // title:           data.name,
+            title:           data.name,
             // subtitle:        data.subtitle,
             // field_item_id:   data.field_item_id,
             // tech:            data.tech,

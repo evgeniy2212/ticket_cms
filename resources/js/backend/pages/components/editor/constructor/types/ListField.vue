@@ -13,12 +13,12 @@
                 <li class="mb-2" v-for="(element,key) in field_items">
                     <small class="text-muted">{{ itemCount(field_items[key].name) }} / {{ getLimit }}</small>
                     <input
-                        v-model="field_items[key].name"
+                        v-model="field_items[key].body"
                         :id="key"
                         @blur="updateField"
                         @keyup="validateItem"
                         class="form-control form-control-sm"
-                        placeholder="Елемент списку"
+                        placeholder="List item"
                         type="text">
                 </li>
             </component>
@@ -74,9 +74,9 @@ export default {
         field: {
             immediate: true,
             handler(field) {
+                // console.log('field: ', field);
                 if(field && field.field_items){
                     this.field_items = field.field_items;
-                    this.boolean     = field.boolean;
                 }
             },
             deep     : true

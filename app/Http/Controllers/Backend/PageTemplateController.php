@@ -77,7 +77,6 @@ class PageTemplateController extends Controller
      */
     public function edit($id)
     {
-//        dd(PageTemplate::find($id)->fields);
         return view('backend.templates.edit', [
             'itemId' => $id,
             'field_types' => FieldType::all(),
@@ -94,7 +93,7 @@ class PageTemplateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        dd('soon');
     }
 
     public function destroy(Request $request, $id)

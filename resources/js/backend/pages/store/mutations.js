@@ -58,6 +58,13 @@ export default {
             categories: value
         };
     },
+    setTemplate(state, value) {
+        console.log('setTemplate: ', state, value.name);
+        state.content = {
+            ...state.content,
+            template: value.name
+        };
+    },
     // constructor
     pushField(state, type) {
         if (type !== undefined) {

@@ -7,6 +7,7 @@ use App\Models\FieldItem;
 use App\Models\FieldType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 
 class FieldProvider
 {
@@ -48,24 +49,20 @@ class FieldProvider
      */
     public function store(Model $model, array $field)
     {
-//        dd($field);
-        $fieldValue = Field::updateOrCreate(
+        $fieldValue = Field::create(
             [
                 'model_type' => get_class($model),
                 'model_id' => $model->id,
-                'field_type_id' => $field['field_type_id']
-            ],
-            [
+                'field_type_id' => $field['field_type_id'],
                 'position' => $field['position']
             ]
         );
         $this->field = Field::find($fieldValue->id);
-//dd($this->field, $this->field->fieldItems);
+
 
         $this->fieldItems  = $this->field->fieldItems;
         $this->component  = $field['component'];
         unset($field['component']);
-        $this->defaultFieldStore($field);
         switch ($this->component) {
             case FieldType::COMPONENT_HEADER:
             case FieldType::COMPONENT_HTML:
@@ -73,25 +70,18 @@ class FieldProvider
             case FieldType::COMPONENT_QUOTE:
             case FieldType::COMPONENT_SPOILER:
             case FieldType::COMPONENT_IFRAME:
-                break;
             case FieldType::COMPONENT_FILE:
-//                $this->storeFileBlock($blockData);
-                break;
             case FieldType::COMPONENT_LIST:
                 $this->storeList($field);
                 break;
             case FieldType::COMPONENT_SLIDER:
                 $this->storeImageBlock($field);
-//                $this->setSeoService();
-//                $this->setIframeFilter(false);
                 break;
             case FieldType::COMPONENT_OPINION:
                 $this->storeImageBlock($field);
-//                $this->setSeoService();
-//                $this->setIframeFilter();
                 break;
         }
-//        dd($this->getBody());
+
         return $this->renderedBody = $this->getBody();
     }
 
@@ -100,18 +90,16 @@ class FieldProvider
      */
     private function defaultFieldStore(array $fieldData)
     {
-//        dd($this->fieldItems);
         if ($this->fieldItems->isNotEmpty()) {
             $this->fieldItems->map(function ($field) {
                 // TODO it doesn`t work))
+                dd($field);
                 $field->translate(App::getLocale())->body = $field['body'];
                 $field->save();
             });
         } else {
             $filteredBlockData = $fieldData;
-
             unset($filteredBlockData['field_items']);
-//            dd($filteredBlockData);
             if(array_key_exists('body', $filteredBlockData)) {
                 $this->fieldItem = FieldItem::create(
                     [
@@ -133,32 +121,31 @@ class FieldProvider
      */
     private function storeList(array $field)
     {
+        $list = [];
         foreach ($field['field_items'] as $fieldItem) {
-//            $this->fieldItem = isset($fieldItem['id']) ? FieldItem::find($fieldItem['id']) : null;
-//            $this->fieldItem = isset($fieldItem['id']) ? FieldItem::find($fieldItem['id']) : null;
-            $data = [
+//            $data = [
 //                'id'   => $this->fieldItem,
-                'body' => $fieldItem['name'],
-            ];
-//            dd($field['field_items'], $data, $this->fieldItem->translations());
-            if ($this->fieldItem) {
-                $this->fieldItem->update($data);
-            } else {
-                $this->fieldItems = FieldItem::create(
+//                'body' => $fieldItem['name'],
+//            ];
+//            dd($fieldItem['body']);
+//            Log::info('fieldItem: ', [$this->fieldItem]);
+//            if ($this->fieldItem) {
+//                $this->fieldItem->update($data);
+//            } else {
+                $list[] = FieldItem::create(
                     [
                         'name' => '',
                         'field_id' => $this->field->id,
                         App::getLocale() => [
-                            'body' => $fieldItem['name']
+                            'body' => $fieldItem['body']
                         ]
                     ]
                 );
-//                $this->fieldItem = $this->field
-//                    ->fieldItems()
-//                    ->create($data);
-//                dd($this->fieldItems);
-            }
+//            }
         }
+//        Log::info('List: ', [$list]);
+//        Log::info('FieldItems: ', [$field['field_items']]);
+        $this->fieldItems = $list;
     }
 
     /**
@@ -168,6 +155,8 @@ class FieldProvider
     private function getBody(): string
     {
 //        dd($this->field, $this->component, $this->fieldItem);
+//        dd($this->fieldItems);
+//dd($this->fieldItems, $this->field, $this->fieldItem);
         return $this->field->visible ? view(
             'backend.field_types.' . $this->component,
             [

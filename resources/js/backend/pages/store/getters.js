@@ -50,6 +50,13 @@ export default {
     getCategoriesList(state) {
         return state.dic.categories
     },
+    getTemplate(state) {
+        return state.content.template
+    },
+    getTemplatesList(state) {
+        console.log('getTemplatesList state: ', state);
+        return state.dic.templates
+    },
     getPubBySchedule(state) {
         return state.content.pub_by_schedule
     },
@@ -61,7 +68,7 @@ export default {
         return state.dic.field_types
     },
     getFields(state) {
-        console.log(state.content);
+        console.log('state.content: ', state.content);
         return state.content.fields
     },
     // bottom editor

@@ -35,7 +35,7 @@
             // admin permissions
             Route::resource('permissions', 'Backend\Users\PermissionsController')->except('show');
             // admin pages
-            Route::resource('pages', 'Backend\PagesController')->except('show');
+            Route::resource('pages', 'Backend\PagesController');
             // admin templates
             Route::resource('templates', 'Backend\PageTemplateController');
             // admin logs

@@ -7,13 +7,13 @@
                 <span class="fa fa-eye"></span>
                 Show
             </a>
-            <a v-if="canSave"
-               @click="saveAndContinue"
-               class="btn btn-outline-primary"
-               href="#">
-                <span class="fa fa-save"></span>
-                {{ this.getItemId ? 'Update and continue' : 'Create and continue' }}
-            </a>
+<!--            <a v-if="canSave"-->
+<!--               @click="saveAndContinue"-->
+<!--               class="btn btn-outline-primary"-->
+<!--               href="#">-->
+<!--                <span class="fa fa-save"></span>-->
+<!--                {{ this.getItemId ? 'Update and continue' : 'Create and continue' }}-->
+<!--            </a>-->
             <a v-if="canSave"
                @click="save"
                class="btn btn-outline-secondary"
@@ -21,24 +21,24 @@
                 <span class="fa fa-save"></span>
                 {{ this.getItemId ? 'Update' : 'Create' }}
             </a>
-            <a v-if="this.getItemId && !this.getVisibility"
-               @click="publishNow"
-               class="btn btn-outline-info"
-               href="#">
-                <span class="fa fa-eye"></span>
-                Опублікувати зараз
-            </a>
-            <a v-if="this.getItemId && !this.getVisibility &&  !this.getPubBySchedule"
-               @click="publishBySchedule" class="btn btn-outline-success" href="#">
-                <span class="fa fa-calendar"></span>
-                Опублікувати за розкладом
-            </a>
-            <a v-if="this.getItemId && this.getVisibility"
-               @click="hide"
-               class="btn btn-outline-warning" href="#">
-                <span class="fa fa-eye-slash"></span>
-                Приховати
-            </a>
+<!--            <a v-if="this.getItemId && !this.getVisibility"-->
+<!--               @click="publishNow"-->
+<!--               class="btn btn-outline-info"-->
+<!--               href="#">-->
+<!--                <span class="fa fa-eye"></span>-->
+<!--                Опублікувати зараз-->
+<!--            </a>-->
+<!--            <a v-if="this.getItemId && !this.getVisibility &&  !this.getPubBySchedule"-->
+<!--               @click="publishBySchedule" class="btn btn-outline-success" href="#">-->
+<!--                <span class="fa fa-calendar"></span>-->
+<!--                Опублікувати за розкладом-->
+<!--            </a>-->
+<!--            <a v-if="this.getItemId && this.getVisibility"-->
+<!--               @click="hide"-->
+<!--               class="btn btn-outline-warning" href="#">-->
+<!--                <span class="fa fa-eye-slash"></span>-->
+<!--                Приховати-->
+<!--            </a>-->
             <a v-if="this.getItemId"
                @click="deleteItem" class="btn btn-outline-danger" href="#">
                 <span class="fa fa-trash"></span>
@@ -83,7 +83,7 @@
                 // return true;
             },
             showUrl() {
-                return this.getAlias ? '/' + this.getAlias + '?preview' : '#';
+                return this.getAlias ? '/' + this.getAlias : '#';
             }
         },
         methods:  {
